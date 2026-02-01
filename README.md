@@ -315,8 +315,24 @@ arxiv-reading-data/         # Data (private, separate repo)
 <summary>Available Skills</summary>
 
 - `/paper-init <arxiv_id>` — Initialize a paper for reading
+- `/talk-shit <paper_id> section <n>` — Start focused reading session on a section
+- `/okay` — End session, log insights, get encouragement for tomorrow
 - `/privacy-scan` — Scan for sensitive info before publishing
-- `/stage-commit` — Privacy scan + update docs + commit
+- `/stage-commit` — Privacy scan + check docs + commit
+</details>
+
+<details>
+<summary>Available Scripts</summary>
+
+- `process_paper.py` — Full pipeline: download, split, index
+- `download_arxiv.py` — Download arXiv source files
+- `split_sections.py` — Split tex into sections
+- `build_index.py` — Build paper index with stats
+- `search_paper.py` — Search sections/equations/text
+- `build_taxonomy.py` — Build section taxonomy
+- `session_logger.py` — Log sessions and weekly insights
+- `privacy_scan.py` — Scan for sensitive data
+- `stage_commit.py` — Staging workflow
 </details>
 
 <details>
