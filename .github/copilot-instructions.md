@@ -34,7 +34,12 @@ No external dependencies beyond pytest. Python standard library only.
 
 **Output directory:** All scripts default to `../arxiv-reading-data/papers/` (sibling data repo). Override with `ARXIV_DATA_DIR` env var or `--output-dir` flag.
 
-**Skills system:** Markdown files in `skills/` define slash commands (`/paper-init`, `/privacy-scan`, `/stage-commit`) that the AI assistant recognizes.
+**Skills system:** Markdown files in `skills/` define slash commands that the AI assistant recognizes:
+- `/paper-init <arxiv_id>` — Download and parse a paper
+- `/privacy-scan` — Check for sensitive data before pushing
+- `/stage-commit` — Privacy scan + commit workflow
+- `/talk-shit <paper_id> section <n>` — Start focused reading session
+- `/okay` — End session, log insights, get encouragement
 
 ## Key Conventions
 
@@ -48,4 +53,7 @@ No external dependencies beyond pytest. Python standard library only.
 - Attention → weighted averaging / kernel
 - Dropout → ensemble averaging
 
-**Session management:** Reading sessions are logged to `sessions/YYYY-MM-DD.md` in the data repo. Notes go to `notes/<paper-id>.notes.md`.
+**Session management:** 
+- Daily logs: `sessions/YYYY-MM-DD.md`
+- Weekly insights: `notes/YYYY-Www-gaps.md` and `notes/YYYY-Www-mastered.md`
+- Section taxonomy cached in `papers/<id>/taxonomy/`
