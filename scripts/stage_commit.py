@@ -202,33 +202,58 @@ chmod +x .git/hooks/pre-push
     return content
 
 
+def check_readme_current(repo_dir: Path) -> list[str]:
+    """Check if README.md reflects current repo state. Returns list of issues."""
+    readme_path = repo_dir / "README.md"
+    if not readme_path.exists():
+        return ["README.md does not exist"]
+    
+    content = readme_path.read_text()
+    issues = []
+    
+    # Check skills are documented
+    skills_dir = repo_dir / "skills"
+    if skills_dir.exists():
+        for md in skills_dir.glob("*.md"):
+            skill_name = md.stem
+            # Check if skill is mentioned in README
+            if f"/{skill_name}" not in content and skill_name not in content:
+                issues.append(f"Skill /{skill_name} not documented in README")
+    
+    # Check scripts are mentioned (at least the main ones)
+    scripts_dir = repo_dir / "scripts"
+    key_scripts = ['paper_init', 'privacy_scan', 'process_paper']
+    if scripts_dir.exists():
+        for script in key_scripts:
+            if (scripts_dir / f"{script}.py").exists():
+                if script not in content and script.replace('_', '-') not in content:
+                    issues.append(f"Script {script}.py not mentioned in README")
+    
+    return issues
+
+
 def update_readme(repo_dir: Path, dry_run: bool = False) -> bool:
-    """Update README.md with current state."""
+    """Check README.md is current and optionally update stats."""
     print("=" * 60)
-    print("Step 2: Update Documentation")
+    print("Step 2: Check Documentation")
     print("=" * 60)
+    
+    # First check if README reflects current state
+    issues = check_readme_current(repo_dir)
+    if issues:
+        print("  ⚠️  README.md may be outdated:")
+        for issue in issues:
+            print(f"     - {issue}")
+        print("  Consider updating README.md manually to document new features.")
+    else:
+        print("  ✅ README.md appears current")
     
     stats = get_repo_stats(repo_dir)
     print(f"  Scripts: {len(stats['scripts'])}")
     print(f"  Skills: {len(stats['skills'])}")
     print(f"  Tests: {stats['tests']}")
     
-    readme_path = repo_dir / "README.md"
-    new_content = generate_readme_content(repo_dir, stats)
-    
-    if readme_path.exists():
-        old_content = readme_path.read_text()
-        if old_content.strip() == new_content.strip():
-            print("  README.md is up to date")
-            return False
-    
-    if dry_run:
-        print("  [DRY RUN] Would update README.md")
-    else:
-        readme_path.write_text(new_content)
-        print("  ✅ Updated README.md")
-    
-    return True
+    return len(issues) > 0
 
 
 def show_staged_changes(repo_dir: Path):
