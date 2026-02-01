@@ -1,0 +1,17 @@
+# Data directories (use symlinks or set ARXIV_DATA_DIR)
+papers/*
+notes/*
+sessions/*
+!papers/.gitkeep
+!notes/.gitkeep
+!sessions/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*/__pycache__/

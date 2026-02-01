@@ -1,0 +1,33 @@
+#!/bin/bash
+# -----------------------------------------------------------------------------
+# ArXiv Reading Assistant
+# Copyright (C) 2026 nw13slx
+# License: GPL-3.0 (see LICENSE file)
+#
+# DISCLAIMER: This code was generated with assistance from GitHub Copilot
+# (Claude Opus 4.5, February 2026). The authors make no warranties regarding
+# accuracy or reliability. AI-generated code may contain errors or biases.
+# USE AT YOUR OWN RISK.
+# -----------------------------------------------------------------------------
+
+# Pre-push hook for privacy scanning
+# Install: cp scripts/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+echo "🔍 Running privacy scan before push..."
+
+# Get the repo root
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+# Run privacy scan (exclude data directories which may have paper author emails)
+python "$REPO_ROOT/scripts/privacy_scan.py" "$REPO_ROOT" -e "papers/.*" -e "notes/.*"
+
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ Privacy scan found HIGH severity issues!"
+    echo "   Fix the issues above before pushing."
+    echo "   Or bypass with: git push --no-verify"
+    exit 1
+fi
+
+echo "✅ Privacy scan passed"
+exit 0
