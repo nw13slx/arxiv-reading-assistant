@@ -1,6 +1,6 @@
 # Stage Commit Skill
 
-Automated staging workflow: privacy scan → update docs → commit.
+Automated staging workflow: privacy scan → check docs → commit.
 
 ## Usage
 
@@ -13,11 +13,10 @@ Automated staging workflow: privacy scan → update docs → commit.
 1. **Privacy Scan** - Checks for sensitive info (HOME, USER, emails, keys)
    - Aborts if HIGH severity issues found
    
-2. **Update Docs** - Auto-updates README.md with:
-   - Current list of scripts
-   - Current list of skills
-   - Test count
-   - Last updated date
+2. **Check Docs** - Verifies README.md is current:
+   - All skills documented
+   - Key scripts mentioned
+   - Warns if outdated (does not auto-update)
    
 3. **Review Changes** - Shows staged files
 
@@ -38,7 +37,7 @@ python scripts/stage_commit.py --dry-run
 # Skip privacy scan (not recommended)
 python scripts/stage_commit.py --skip-privacy -m "Quick fix"
 
-# Skip doc updates
+# Skip doc check
 python scripts/stage_commit.py --skip-docs -m "Code only change"
 ```
 
@@ -49,20 +48,6 @@ Before pushing to GitHub:
 # Stage and commit
 python scripts/stage_commit.py -m "Ready for release"
 
-# Final privacy check
-python scripts/privacy_scan.py .
-
 # Push
-git push origin master
-```
-
-## For Squashing History
-
-When preparing for initial push:
-```bash
-# Make changes...
-python scripts/stage_commit.py --amend
-
-# Repeat until satisfied, then push
-git push -u origin master
+git push origin main
 ```
